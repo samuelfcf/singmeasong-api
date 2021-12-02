@@ -1,5 +1,5 @@
 class Helper {
-  sucess = (res, data) => {
+  success = (res, data) => {
     return res.status(data.status || 200).send({
       ...data
     });

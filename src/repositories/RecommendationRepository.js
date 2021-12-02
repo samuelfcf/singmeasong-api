@@ -16,6 +16,34 @@ class RecommendationRepository {
     );
     return result.rows[0];
   }
+
+  async findById({ id }) {
+    const result = await connection.query(
+      'SELECT * FROM recommendations WHERE id = $1;',
+      [id]
+    );
+    return result.rows[0];
+  }
+
+  async upvote({ id }) {
+    const result = await connection.query(
+      'UPDATE recommendations SET score = score + 1 WHERE id = $1 RETURNING *;',
+      [id]
+    );
+    return result.rows[0];
+  }
+
+  async downvote({ id }) {
+    const result = await connection.query(
+      'UPDATE recommendations SET score = score - 1 WHERE id = $1 RETURNING *;',
+      [id]
+    );
+    return result.rows[0];
+  }
+
+  async deleteById({ id }) {
+    await connection.query('DELETE FROM recommendations WHERE id = $1;', [id]);
+  }
 }
 
 export default RecommendationRepository;
