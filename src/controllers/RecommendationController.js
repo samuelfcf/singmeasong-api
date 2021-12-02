@@ -1,5 +1,6 @@
 import RecommendationService from '../services/RecommendationService.js';
 import joi from 'joi';
+import Helper from '../utils/Helper.js';
 
 const recommendationSchema = joi.object({
   name: joi.string().required(),
@@ -23,13 +24,13 @@ class RecommendationController {
         youtubeLink
       });
 
-      return res.status(201).send({
+      return Helper.sucess(res, {
+        message: 'Recommendation created successfully',
         data: recommendation
       });
     } catch (err) {
-      return res.status(err.status).send({
-        message: err.message
-      });
+      console.log(err);
+      return Helper.failed(res, err);
     }
   }
 }
