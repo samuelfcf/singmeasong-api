@@ -7,6 +7,10 @@ const recommendationSchema = joi.object({
   youtubeLink: joi.string().required()
 });
 
+const updateRecommendationSchame = joi.object({
+  id: joi.string().required()
+});
+
 class RecommendationController {
   async create(req, res, next) {
     try {
@@ -14,19 +18,56 @@ class RecommendationController {
       const { error } = recommendationSchema.validate({ name, youtubeLink });
       if (error) return next(error.details);
 
-      if (!name || !youtubeLink) {
-        return res.sendStatus(400);
-      }
-
       const recommendationService = new RecommendationService();
       const recommendation = await recommendationService.newRecommendation({
         name,
         youtubeLink
       });
 
-      return Helper.sucess(res, {
+      return Helper.success(res, {
         message: 'Recommendation created successfully',
+        status: 201,
         data: recommendation
+      });
+    } catch (err) {
+      console.log(err);
+      return Helper.failed(res, err);
+    }
+  }
+
+  async upvote(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { error } = updateRecommendationSchame.validate({ id });
+      if (error) return next(error.details);
+
+      const recommendationService = new RecommendationService();
+      const recommendationUpvoted = await recommendationService.upvote({ id });
+
+      return Helper.success(res, {
+        message: 'Upvote done successfully',
+        data: recommendationUpvoted
+      });
+    } catch (err) {
+      console.log(err);
+      return Helper.failed(res, err);
+    }
+  }
+
+  async downvoted(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { error } = updateRecommendationSchame.validate({ id });
+      if (error) return next(error.details);
+
+      const recommendationService = new RecommendationService();
+      const recommendationDownvoted = await recommendationService.downvote({
+        id
+      });
+
+      return Helper.success(res, {
+        message: 'Downvote done successfully',
+        data: recommendationDownvoted
       });
     } catch (err) {
       console.log(err);

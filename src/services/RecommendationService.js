@@ -24,6 +24,36 @@ class RecommendationService {
     });
     return recommendation;
   }
+
+  async upvote({ id }) {
+    const recommendationService = new RecommendationRepository();
+
+    const recommendationExists = await recommendationService.findById({ id });
+    if (!recommendationExists) {
+      throw new AppError('Recommendations does not exists');
+    }
+
+    const recommendationUpvoted = await recommendationService.upvote({ id });
+    return recommendationUpvoted;
+  }
+
+  async downvote({ id }) {
+    const recommendationService = new RecommendationRepository();
+
+    const recommendationExists = await recommendationService.findById({ id });
+    if (!recommendationExists) {
+      throw new AppError('Recommendations does not exists');
+    }
+
+    if (recommendationExists.score <= -5) {
+      return recommendationService.deleteById({ id });
+    }
+
+    const recommendationDownvoted = await recommendationService.downvote({
+      id
+    });
+    return recommendationDownvoted;
+  }
 }
 
 export default RecommendationService;
