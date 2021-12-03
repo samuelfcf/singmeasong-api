@@ -9,31 +9,33 @@ class RecommendationService {
       throw new AppError('Not a youtube link', 400);
     }
 
-    const recommendationService = new RecommendationRepository();
-    const recommendationExists = await recommendationService.findByLink({
+    const recommendationRepository = new RecommendationRepository();
+    const recommendationExists = await recommendationRepository.findByLink({
       youtubeLink
     });
-
     if (recommendationExists) {
       throw new AppError('Recommendation already exists', 409);
     }
 
-    const recommendation = await recommendationService.create({
+    const recommendation = await recommendationRepository.create({
       name,
       youtubeLink
     });
+
     return recommendation;
   }
 
   async upvote({ id }) {
-    const recommendationService = new RecommendationRepository();
+    const recommendationRepository = new RecommendationRepository();
 
-    const recommendationExists = await recommendationService.findById({ id });
+    const recommendationExists = await recommendationRepository.findById({
+      id
+    });
     if (!recommendationExists) {
       throw new AppError('Recommendations does not exists');
     }
 
-    const recommendationUpvoted = await recommendationService.upvote({ id });
+    const recommendationUpvoted = await recommendationRepository.upvote({ id });
     return recommendationUpvoted;
   }
 
