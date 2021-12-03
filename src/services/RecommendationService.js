@@ -56,6 +56,36 @@ class RecommendationService {
     });
     return recommendationDownvoted;
   }
+
+  async getRandomRecommendation() {
+    const recommendationRepository = new RecommendationRepository();
+
+    const allRecommendations = await recommendationRepository.findAll();
+    if (!allRecommendations) {
+      throw new AppError('No recommendations yet', 404);
+    }
+
+    const onlyHasScoreBiggerThanTen = allRecommendations.every(
+      (r) => r.score > 10
+    );
+    const onlyHasScoreLowerOrEqualThanTen = allRecommendations.every(
+      (r) => r.score <= 10
+    );
+
+    if (onlyHasScoreBiggerThanTen || onlyHasScoreLowerOrEqualThanTen) {
+      const randomRecommendation = Math.floor(
+        Math.random() * allRecommendations.length
+      );
+      return randomRecommendation;
+    }
+
+    const isHighProbability = Math.floor(Math.random() * 10) < 7;
+    if (!isHighProbability) {
+      return null;
+    }
+
+    return null;
+  }
 }
 
 export default RecommendationService;

@@ -1,6 +1,7 @@
 import RecommendationService from '../../src/services/RecommendationService.js';
 import validateYoutubeLink from '../../src/utils/ValidateYoutubeLink.js';
 import RecommendationRepository from '../../src/repositories/RecommendationRepository.js';
+import AppError from '../../src/errors/AppError.js';
 
 const stu = new RecommendationService();
 
@@ -16,12 +17,11 @@ describe('Recommendation Service', () => {
   test('New Recommendation: Should returns a new AppError - Not a youtube link', async () => {
     validateYoutubeLink.mockImplementationOnce(() => false);
 
-    await expect(async () => {
-      await stu.newRecommendation({
-        name: 'Test',
-        youtubeLink: 'www.youtube.com'
-      });
-    }).rejects.toThrowError('Not a youtube link');
+    const promise = stu.newRecommendation({
+      name: 'Test',
+      youtubeLink: 'www.youtube.com'
+    });
+    await expect(promise).rejects.toThrowError(AppError);
   });
 
   test('New Recommendation: Should returns a new AppError - Recommendation already exists', async () => {
@@ -33,12 +33,11 @@ describe('Recommendation Service', () => {
       };
     });
 
-    await expect(async () => {
-      await stu.newRecommendation({
-        name: 'Test',
-        youtubeLink: 'www.youtube.com'
-      });
-    }).rejects.toThrowError('Recommendation already exists');
+    const promise = stu.newRecommendation({
+      name: 'Test',
+      youtubeLink: 'www.youtube.com'
+    });
+    await expect(promise).rejects.toThrowError('Recommendation already exists');
   });
 
   test('New Recommendation: Should returns a new Recommendation', async () => {
@@ -56,6 +55,7 @@ describe('Recommendation Service', () => {
         }
       };
     });
+
     const result = await stu.newRecommendation(fakeNewRecommendation);
     expect(result).toHaveProperty('youtubeLink');
   });
@@ -67,9 +67,8 @@ describe('Recommendation Service', () => {
       };
     });
 
-    await expect(async () => {
-      await stu.upvote({ id: 1 });
-    }).rejects.toThrowError('Recommendations does not exists');
+    const promise = stu.upvote({ id: 1 });
+    await expect(promise).rejects.toThrowError(AppError);
   });
 
   test('Upvote: Should upvote the recommendation', async () => {
@@ -79,6 +78,7 @@ describe('Recommendation Service', () => {
         upvote: () => true
       };
     });
+
     const result = await stu.upvote({ id: 1 });
     expect(result).toBeTruthy();
   });
@@ -90,9 +90,8 @@ describe('Recommendation Service', () => {
       };
     });
 
-    await expect(async () => {
-      await stu.downvote({ id: 1 });
-    }).rejects.toThrowError('Recommendations does not exists');
+    const promise = stu.downvote({ id: 1 });
+    await expect(promise).rejects.toThrowError(AppError);
   });
 
   test('Downvote: Should delete recommendation if score < -5', async () => {
@@ -108,6 +107,7 @@ describe('Recommendation Service', () => {
         deleteById: () => null
       };
     });
+
     const result = await stu.downvote({ id: 1 });
     await expect(result).toEqual(null);
   });

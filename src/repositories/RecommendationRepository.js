@@ -25,6 +25,11 @@ class RecommendationRepository {
     return result.rows[0];
   }
 
+  async findAll() {
+    const result = await connection.query('SELECT * FROM recommendations;');
+    return result.rows;
+  }
+
   async upvote({ id }) {
     const result = await connection.query(
       'UPDATE recommendations SET score = score + 1 WHERE id = $1 RETURNING *;',
