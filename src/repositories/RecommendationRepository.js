@@ -42,7 +42,11 @@ class RecommendationRepository {
   }
 
   async deleteById({ id }) {
-    await connection.query('DELETE FROM recommendations WHERE id = $1;', [id]);
+    await connection.query(
+      'DELETE FROM recommendations WHERE id = $1 RETURNING *;',
+      [id]
+    );
+    return null;
   }
 }
 
