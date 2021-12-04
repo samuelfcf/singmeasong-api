@@ -9,6 +9,11 @@ class RecommendationRepository {
     return result.rows[0];
   }
 
+  async findAll() {
+    const result = await connection.query('SELECT * FROM recommendations;');
+    return result.rows;
+  }
+
   async findByLink({ youtubeLink }) {
     const result = await connection.query(
       'SELECT * FROM recommendations WHERE youtube_link = $1;',
@@ -23,6 +28,20 @@ class RecommendationRepository {
       [id]
     );
     return result.rows[0];
+  }
+
+  async findScoreOverTen() {
+    const result = await connection.query(
+      'SELECT * FROM recommendations WHERE score>10;'
+    );
+    return result.rows;
+  }
+
+  async findScoreUnderTen() {
+    const result = await connection.query(
+      'SELECT * FROM recommendations WHERE score>-5 AND score<=10;'
+    );
+    return result.rows;
   }
 
   async upvote({ id }) {

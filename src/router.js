@@ -9,6 +9,6 @@ router.get('/status', (_, res) => {
   });
 });
 
-router.use('/recommendation', recommendationRouter);
+router.use('/recommendations', recommendationRouter);
 
 export default router;

@@ -1,6 +1,10 @@
 import RecommendationRepository from '../repositories/RecommendationRepository.js';
 import AppError from '../errors/AppError.js';
-import validateYoutubeLink from '../utils/ValidateYoutubeLink.js';
+import validateYoutubeLink from '../utils/validateYoutubeLink.js';
+import getRandom from '../utils/getRandom.js';
+import calculateProbability from '../utils/calculateProbability.js';
+import checkScoreOverTen from '../utils/checkScoreOverTen.js';
+import checkScoreUnderTen from '../utils/checkScoreUnderTen.js';
 
 class RecommendationService {
   async newRecommendation({ name, youtubeLink }) {
@@ -55,6 +59,36 @@ class RecommendationService {
       id
     });
     return recommendationDownvoted;
+  }
+
+  async getRandomRecommendation() {
+    const recommendationRepository = new RecommendationRepository();
+
+    const allRecommendations = await recommendationRepository.findAll();
+    if (!allRecommendations) {
+      throw new AppError('No recommendations yet', 404);
+    }
+
+    const onlyHasScoreOverTen = checkScoreOverTen(allRecommendations);
+    const onlyHasScoreUnderOrEqualThanTen =
+      checkScoreUnderTen(allRecommendations);
+
+    if (onlyHasScoreOverTen || onlyHasScoreUnderOrEqualThanTen) {
+      const randomRecommendation = getRandom(allRecommendations);
+      return randomRecommendation;
+    }
+
+    const isHighProbability = calculateProbability();
+    let result;
+
+    if (isHighProbability) {
+      result = await recommendationRepository.findScoreOverTen();
+    } else {
+      result = await recommendationRepository.findScoreUnderTen();
+    }
+
+    const randomRecommendation = getRandom(result);
+    return randomRecommendation;
   }
 }
 
