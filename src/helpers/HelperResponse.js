@@ -1,4 +1,4 @@
-class Helper {
+class HelperResponse {
   success = (res, data) => {
     return res.status(data.status || 200).send({
       ...data
@@ -13,4 +13,4 @@ class Helper {
   };
 }
 
-export default new Helper();
+export default new HelperResponse();

@@ -1,6 +1,6 @@
 import RecommendationService from '../services/RecommendationService.js';
 import joi from 'joi';
-import Helper from '../utils/Helper.js';
+import HelperResponse from '../helpers/HelperResponse.js';
 
 const recommendationSchema = joi.object({
   name: joi.string().required(),
@@ -24,14 +24,14 @@ class RecommendationController {
         youtubeLink
       });
 
-      return Helper.success(res, {
+      return HelperResponse.success(res, {
         message: 'Recommendation created successfully',
         status: 201,
         data: recommendation
       });
     } catch (err) {
       console.log(err);
-      return Helper.failed(res, err);
+      return HelperResponse.failed(res, err);
     }
   }
 
@@ -44,13 +44,13 @@ class RecommendationController {
       const recommendationService = new RecommendationService();
       const recommendationUpvoted = await recommendationService.upvote({ id });
 
-      return Helper.success(res, {
+      return HelperResponse.success(res, {
         message: 'Upvote done successfully',
         data: recommendationUpvoted
       });
     } catch (err) {
       console.log(err);
-      return Helper.failed(res, err);
+      return HelperResponse.failed(res, err);
     }
   }
 
@@ -65,13 +65,13 @@ class RecommendationController {
         id
       });
 
-      return Helper.success(res, {
+      return HelperResponse.success(res, {
         message: 'Downvote done successfully',
         data: recommendationDownvoted
       });
     } catch (err) {
       console.log(err);
-      return Helper.failed(res, err);
+      return HelperResponse.failed(res, err);
     }
   }
 }
