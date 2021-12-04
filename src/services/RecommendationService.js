@@ -1,6 +1,7 @@
 import RecommendationRepository from '../repositories/RecommendationRepository.js';
 import AppError from '../errors/AppError.js';
-import validateYoutubeLink from '../utils/ValidateYoutubeLink.js';
+import validateYoutubeLink from '../utils/validateYoutubeLink.js';
+import getRandom from '../utils/getRandom.js';
 
 class RecommendationService {
   async newRecommendation({ name, youtubeLink }) {
@@ -73,18 +74,20 @@ class RecommendationService {
     );
 
     if (onlyHasScoreBiggerThanTen || onlyHasScoreLowerOrEqualThanTen) {
-      const randomRecommendation = Math.floor(
-        Math.random() * allRecommendations.length
-      );
+      const randomRecommendation = getRandom(allRecommendations);
       return randomRecommendation;
     }
 
     const isHighProbability = Math.floor(Math.random() * 10) < 7;
-    if (!isHighProbability) {
-      return null;
-    }
+    let result;
 
-    return null;
+    if (isHighProbability) {
+      result = await recommendationRepository.findScoreOverTen();
+    }
+    result = await recommendationRepository.findScoreUnderTen();
+
+    const randomRecommendation = getRandom(result);
+    return randomRecommendation;
   }
 }
 

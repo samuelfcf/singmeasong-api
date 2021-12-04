@@ -1,11 +1,11 @@
 import RecommendationService from '../../src/services/RecommendationService.js';
-import validateYoutubeLink from '../../src/utils/ValidateYoutubeLink.js';
+import validateYoutubeLink from '../../src/utils/validateYoutubeLink.js';
 import RecommendationRepository from '../../src/repositories/RecommendationRepository.js';
 import AppError from '../../src/errors/AppError.js';
 
 const stu = new RecommendationService();
 
-jest.mock('../../src/utils/ValidateYoutubeLink.js');
+jest.mock('../../src/utils/validateYoutubeLink.js');
 jest.mock('../../src/repositories/RecommendationRepository.js');
 
 describe('Recommendation Service', () => {

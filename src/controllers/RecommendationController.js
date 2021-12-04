@@ -54,7 +54,7 @@ class RecommendationController {
     }
   }
 
-  async downvoted(req, res, next) {
+  async downvote(req, res, next) {
     try {
       const { id } = req.params;
       const { error } = updateRecommendationSchame.validate({ id });
@@ -68,6 +68,21 @@ class RecommendationController {
       return HelperResponse.success(res, {
         message: 'Downvote done successfully',
         data: recommendationDownvoted
+      });
+    } catch (err) {
+      console.log(err);
+      return HelperResponse.failed(res, err);
+    }
+  }
+
+  async getRandomRecommendation(_, res, __) {
+    try {
+      const recommendationService = new RecommendationService();
+      const recomendation =
+        await recommendationService.getRandomRecommendation();
+
+      return HelperResponse.success(res, {
+        data: recomendation
       });
     } catch (err) {
       console.log(err);

@@ -5,6 +5,10 @@ const recommendationRouter = Router();
 
 recommendationRouter.post('/', RecommendationController.create);
 recommendationRouter.post('/:id/upvote', RecommendationController.upvote);
-recommendationRouter.post('/:id/downvote', RecommendationController.downvoted);
+recommendationRouter.post('/:id/downvote', RecommendationController.downvote);
+recommendationRouter.get(
+  '/random',
+  RecommendationController.getRandomRecommendation
+);
 
 export default recommendationRouter;
