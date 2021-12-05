@@ -44,18 +44,20 @@ class RecommendationService {
   }
 
   async downvote({ id }) {
-    const recommendationService = new RecommendationRepository();
+    const recommendationRepository = new RecommendationRepository();
 
-    const recommendationExists = await recommendationService.findById({ id });
+    const recommendationExists = await recommendationRepository.findById({
+      id
+    });
     if (!recommendationExists) {
       throw new AppError('Recommendations does not exists');
     }
 
     if (recommendationExists.score <= -5) {
-      return recommendationService.deleteById({ id });
+      return recommendationRepository.deleteById({ id });
     }
 
-    const recommendationDownvoted = await recommendationService.downvote({
+    const recommendationDownvoted = await recommendationRepository.downvote({
       id
     });
     return recommendationDownvoted;
@@ -89,6 +91,20 @@ class RecommendationService {
 
     const randomRecommendation = getRandom(result);
     return randomRecommendation;
+  }
+
+  async getTopRecommendations({ amount }) {
+    const recomendationRepository = new RecommendationRepository();
+
+    const topRecommendations = await recomendationRepository.findTops({
+      limit: amount
+    });
+
+    if (amount > 0 && topRecommendations.length === 0) {
+      throw new AppError('No recommendations yet', 404);
+    }
+
+    return topRecommendations;
   }
 }
 

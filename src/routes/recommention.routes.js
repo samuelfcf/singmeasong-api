@@ -10,5 +10,9 @@ recommendationRouter.get(
   '/random',
   RecommendationController.getRandomRecommendation
 );
+recommendationRouter.get(
+  '/top/:amount',
+  RecommendationController.getTopRecommendations
+);
 
 export default recommendationRouter;

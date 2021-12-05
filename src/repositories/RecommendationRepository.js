@@ -8,7 +8,7 @@ class RecommendationRepository {
     );
     return result.rows[0];
   }
-
+  //select * from recommendations order by score desc limit 3;
   async findAll() {
     const result = await connection.query('SELECT * FROM recommendations;');
     return result.rows;
@@ -41,6 +41,18 @@ class RecommendationRepository {
     const result = await connection.query(
       'SELECT * FROM recommendations WHERE score>-5 AND score<=10;'
     );
+    return result.rows;
+  }
+
+  async findTops({ limit }) {
+    let query = 'SELECT * FROM recommendations ORDER BY score DESC';
+    const preparedValues = [];
+    if (limit) {
+      preparedValues.push(limit);
+      query += ` LIMIT $${preparedValues.length};`;
+    }
+
+    const result = await connection.query(query, preparedValues);
     return result.rows;
   }
 
