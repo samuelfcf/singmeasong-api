@@ -1,6 +1,7 @@
-import RecommendationService from '../services/RecommendationService.js';
 import joi from 'joi';
+import RecommendationService from '../services/RecommendationService.js';
 import HelperResponse from '../helpers/HelperResponse.js';
+import { httpStatus } from '../utils/constants.js';
 
 const recommendationSchema = joi.object({
   name: joi.string().required(),
@@ -30,7 +31,7 @@ class RecommendationController {
 
       return HelperResponse.success(res, {
         message: 'Recommendation created successfully',
-        status: 201,
+        status: httpStatus.CREATED,
         data: recommendation
       });
     } catch (err) {
@@ -42,7 +43,7 @@ class RecommendationController {
   async upvote(req, res, next) {
     try {
       const { id } = req.params;
-      const { error } = updateRecommendationSchame.validate({ id });
+      const { error } = updateRecommendationSchema.validate({ id });
       if (error) return next(error.details);
 
       const recommendationService = new RecommendationService();
@@ -61,7 +62,7 @@ class RecommendationController {
   async downvote(req, res, next) {
     try {
       const { id } = req.params;
-      const { error } = updateRecommendationSchame.validate({ id });
+      const { error } = updateRecommendationSchema.validate({ id });
       if (error) return next(error.details);
 
       const recommendationService = new RecommendationService();
