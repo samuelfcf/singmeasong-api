@@ -7,8 +7,12 @@ const recommendationSchema = joi.object({
   youtubeLink: joi.string().required()
 });
 
-const updateRecommendationSchame = joi.object({
+const updateRecommendationSchema = joi.object({
   id: joi.string().required()
+});
+
+const getTopSchema = joi.object({
+  amount: joi.string().required()
 });
 
 class RecommendationController {
@@ -83,6 +87,25 @@ class RecommendationController {
 
       return HelperResponse.success(res, {
         data: recomendation
+      });
+    } catch (err) {
+      console.log(err);
+      return HelperResponse.failed(res, err);
+    }
+  }
+
+  async getTopRecommendations(req, res, next) {
+    try {
+      const { amount } = req.params;
+      const { error } = getTopSchema.validate({ amount });
+      if (error) return next(error.details);
+
+      const recommendationService = new RecommendationService();
+      const topRecomendations =
+        await recommendationService.getTopRecommendations({ amount });
+
+      return HelperResponse.success(res, {
+        data: topRecomendations
       });
     } catch (err) {
       console.log(err);
