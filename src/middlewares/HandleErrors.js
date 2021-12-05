@@ -1,8 +1,9 @@
 import AppError from '../errors/AppError.js';
+import { httpStatus } from '../utils/constants.js';
 
 const HandleErrors = (err, _, res, __) => {
   const defaultData = {
-    status: 400,
+    status: httpStatus.BAD_REQUAST,
     message: ''
   };
 

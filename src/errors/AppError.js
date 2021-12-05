@@ -1,5 +1,7 @@
+import { httpStatus } from '../utils/constants.js';
+
 class AppError extends Error {
-  status = 500;
+  status = httpStatus.INTERNAL_SERVER_ERROR;
 
   constructor(message, status) {
     super(message);

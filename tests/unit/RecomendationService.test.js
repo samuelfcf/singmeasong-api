@@ -1,19 +1,11 @@
 import RecommendationService from '../../src/services/RecommendationService.js';
-import validateYoutubeLink from '../../src/utils/validateYoutubeLink.js';
-import getRandom from '../../src/utils/getRandom.js';
-import calculateProbability from '../../src/utils/calculateProbability.js';
-import checkScoreOverTen from '../../src/utils/checkScoreOverTen.js';
-import checkScoreUnderTen from '../../src/utils/checkScoreUnderTen.js';
+import * as Functions from '../../src/utils/functions.js';
 import RecommendationRepository from '../../src/repositories/RecommendationRepository.js';
 import AppError from '../../src/errors/AppError.js';
 
 const stu = new RecommendationService();
 
-jest.mock('../../src/utils/validateYoutubeLink.js');
-jest.mock('../../src/utils/getRandom.js');
-jest.mock('../../src/utils/checkScoreOverTen.js');
-jest.mock('../../src/utils/checkScoreUnderTen.js');
-jest.mock('../../src/utils/calculateProbability.js');
+jest.mock('../../src/utils/functions.js');
 jest.mock('../../src/repositories/RecommendationRepository.js');
 
 describe('Recommendation Service', () => {
@@ -23,14 +15,14 @@ describe('Recommendation Service', () => {
   };
 
   test('New Recommendation: Should returns a new AppError - Not a youtube link', async () => {
-    validateYoutubeLink.mockImplementationOnce(() => false);
+    Functions.validateYoutubeLink.mockImplementationOnce(() => false);
 
     const promise = stu.newRecommendation(fakeNewRecommendation);
     await expect(promise).rejects.toThrowError(AppError);
   });
 
   test('New Recommendation: Should returns a new AppError - Recommendation already exists', async () => {
-    validateYoutubeLink.mockImplementationOnce(() => true);
+    Functions.validateYoutubeLink.mockImplementationOnce(() => true);
 
     RecommendationRepository.mockImplementationOnce(() => {
       return {
@@ -43,7 +35,7 @@ describe('Recommendation Service', () => {
   });
 
   test('New Recommendation: Should returns a new Recommendation', async () => {
-    validateYoutubeLink.mockImplementationOnce(() => true);
+    Functions.validateYoutubeLink.mockImplementationOnce(() => true);
 
     RecommendationRepository.mockImplementationOnce(() => {
       return {
@@ -168,9 +160,9 @@ describe('Recommendation Service', () => {
       };
     });
 
-    checkScoreOverTen.mockImplementationOnce(() => true);
-    checkScoreUnderTen.mockImplementationOnce(() => false);
-    getRandom.mockImplementationOnce(() => {
+    Functions.checkScoreOverTen.mockImplementationOnce(() => true);
+    Functions.checkScoreUnderTen.mockImplementationOnce(() => false);
+    Functions.getRandom.mockImplementationOnce(() => {
       return {
         id: 12,
         ...fakeNewRecommendation,
@@ -189,9 +181,9 @@ describe('Recommendation Service', () => {
       };
     });
 
-    checkScoreOverTen.mockImplementationOnce(() => false);
-    checkScoreUnderTen.mockImplementationOnce(() => true);
-    getRandom.mockImplementationOnce(() => {
+    Functions.checkScoreOverTen.mockImplementationOnce(() => false);
+    Functions.checkScoreUnderTen.mockImplementationOnce(() => true);
+    Functions.getRandom.mockImplementationOnce(() => {
       return {
         id: 12,
         ...fakeNewRecommendation,
@@ -224,10 +216,10 @@ describe('Recommendation Service', () => {
       };
     });
 
-    checkScoreOverTen.mockImplementationOnce(() => false);
-    checkScoreUnderTen.mockImplementationOnce(() => false);
-    calculateProbability.mockImplementationOnce(() => true);
-    getRandom.mockImplementationOnce(() => {
+    Functions.checkScoreOverTen.mockImplementationOnce(() => false);
+    Functions.checkScoreUnderTen.mockImplementationOnce(() => false);
+    Functions.calculateProbability.mockImplementationOnce(() => true);
+    Functions.getRandom.mockImplementationOnce(() => {
       return {
         id: 13,
         ...fakeNewRecommendation,
@@ -261,10 +253,10 @@ describe('Recommendation Service', () => {
       };
     });
 
-    checkScoreOverTen.mockImplementationOnce(() => false);
-    checkScoreUnderTen.mockImplementationOnce(() => false);
-    calculateProbability.mockImplementationOnce(() => false);
-    getRandom.mockImplementationOnce(() => {
+    Functions.checkScoreOverTen.mockImplementationOnce(() => false);
+    Functions.checkScoreUnderTen.mockImplementationOnce(() => false);
+    Functions.calculateProbability.mockImplementationOnce(() => false);
+    Functions.getRandom.mockImplementationOnce(() => {
       return {
         id: 13,
         ...fakeNewRecommendation,
