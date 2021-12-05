@@ -96,10 +96,11 @@ class RecommendationService {
   async getTopRecommendations({ amount }) {
     const recomendationRepository = new RecommendationRepository();
 
-    const topRecommendations = recomendationRepository.findTops({
+    const topRecommendations = await recomendationRepository.findTops({
       limit: amount
     });
-    if (!topRecommendations) {
+
+    if (amount > 0 && topRecommendations.length === 0) {
       throw new AppError('No recommendations yet', 404);
     }
 

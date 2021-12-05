@@ -276,4 +276,48 @@ describe('Recommendation Service', () => {
     expect(result).toHaveProperty('score');
     expect(result.score).toBeLessThanOrEqual(10);
   });
+
+  test('Get Top Recommendatations: Should returns a new AppError if amount is > 0 and there is no recommendations', async () => {
+    RecommendationRepository.mockImplementationOnce(() => {
+      return {
+        findTops: () => []
+      };
+    });
+
+    const promise = stu.getTopRecommendations({ amount: 2 });
+    await expect(promise).rejects.toThrowError(AppError);
+  });
+
+  test('Get Top Recommendatations: Should returns no recommendations if limit = 0', async () => {
+    RecommendationRepository.mockImplementationOnce(() => {
+      return {
+        findTops: () => []
+      };
+    });
+
+    const result = await stu.getTopRecommendations({ amount: 0 });
+    await expect(result.length).toBe(0);
+  });
+
+  test('Get Top Recommendatations: Should returns top (limit) recommendations if limit > 0', async () => {
+    RecommendationRepository.mockImplementationOnce(() => {
+      return {
+        findTops: () => [
+          {
+            id: 1,
+            ...fakeNewRecommendation,
+            score: 30
+          },
+          {
+            id: 2,
+            ...fakeNewRecommendation,
+            score: 20
+          }
+        ]
+      };
+    });
+
+    const result = await stu.getTopRecommendations({ amount: 2 });
+    await expect(result.length).toBe(2);
+  });
 });
