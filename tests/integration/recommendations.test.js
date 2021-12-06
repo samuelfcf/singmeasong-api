@@ -123,8 +123,17 @@ describe('POST /recommendations/:id/downvote', () => {
 });
 
 describe('GET /recommendations/random', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     await Factory.createRecommendation();
+  });
+
+  afterEach(async () => {
+    await Factory.deleteRecommendations();
+  });
+
+  test('should returns 200 for random recommendation', async () => {
+    const result = await supertest(app).get('/recommendations/random');
+    expect(result.status).toEqual(httpStatus.SUCCESS);
   });
 
   test('should returns 404 for no recommendations yet', async () => {
@@ -135,7 +144,32 @@ describe('GET /recommendations/random', () => {
 
 describe('GET /recommendations/top/:amount', () => {
   beforeAll(async () => {
+    await Factory.createRecommendation();
+    await Factory.createRecommendation();
+    await Factory.createRecommendation();
+  });
+
+  afterEach(async () => {
     await Factory.deleteRecommendations();
+  });
+
+  test('should returns 200 for top recommendations with valid amount', async () => {
+    const validAmount = 3;
+    const result = await supertest(app).get(
+      `/recommendations/top/${validAmount}`
+    );
+
+    expect(result.status).toEqual(httpStatus.SUCCESS);
+    expect(result.body.data.length).toBeGreaterThan(0);
+  });
+
+  test('should returns 404 for no recommendations yet', async () => {
+    const validAmount = 3;
+    const result = await supertest(app).get(
+      `/recommendations/top/${validAmount}`
+    );
+
+    expect(result.status).toEqual(httpStatus.NOT_FOUND);
   });
 
   test('should returns 500 for invalid amount type', async () => {
@@ -144,12 +178,5 @@ describe('GET /recommendations/top/:amount', () => {
       `/recommendations/top/${invalidAmount}`
     );
     expect(result.status).toEqual(httpStatus.INTERNAL_SERVER_ERROR);
-  });
-
-  test('should returns 404 for no recommendations yet', async () => {
-    const amount = 3;
-    const result = await supertest(app).get(`/recommendations/top/${amount}`);
-
-    expect(result.status).toEqual(httpStatus.NOT_FOUND);
   });
 });
