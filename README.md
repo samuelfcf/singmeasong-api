@@ -112,7 +112,7 @@ The following tools were used in the construction of the project-api:
 - **[Eslint - Airbnb](https://github.com/airbnb/javascript)**
 - **[Prettier](https://github.com/prettier/prettier)**
 
-> See the file [package.json](https://github.com/samuelfcf/atelie-backend/blob/main/package.json)
+> See the file [package.json](https://github.com/samuelfcf/singmeasong-api/blob/main/package.json)
 
 **Utilitários**
 
