@@ -8,10 +8,10 @@ class RecommendationRepository {
     );
     return result.rows[0];
   }
-  //select * from recommendations order by score desc limit 3;
+
   async findAll() {
     const result = await connection.query('SELECT * FROM recommendations;');
-    return result.rows;
+    if (result.rows.length === 0) return null;
   }
 
   async findByLink({ youtubeLink }) {
@@ -78,6 +78,18 @@ class RecommendationRepository {
       [id]
     );
     return null;
+  }
+
+  async delete() {
+    await connection.query('DELETE FROM recommendations;');
+  }
+
+  async toBeDeleted(fakeData) {
+    const result = await connection.query(
+      'INSERT INTO recommendations (name, youtube_link, score) VALUES ($1,$2,$3) RETURNING *;',
+      fakeData
+    );
+    return result.rows[0];
   }
 }
 

@@ -3,7 +3,7 @@ import { httpStatus } from '../utils/constants.js';
 
 const HandleErrors = (err, _, res, __) => {
   const defaultData = {
-    status: httpStatus.BAD_REQUAST,
+    status: httpStatus.BAD_REQUEST,
     message: ''
   };
 

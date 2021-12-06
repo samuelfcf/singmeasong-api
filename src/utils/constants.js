@@ -1,5 +1,5 @@
 const httpStatus = Object.freeze({
-  BAD_REQUAST: 400,
+  BAD_REQUEST: 400,
   SUCCESS: 200,
   CREATED: 201,
   CONFLICT: 409,
