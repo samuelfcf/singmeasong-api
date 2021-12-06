@@ -32,7 +32,7 @@ class RecommendationService {
       id
     });
     if (!recommendationExists) {
-      throw new AppError('Recommendations does not exists');
+      throw new AppError('Recommendations does not exists', 404);
     }
 
     const recommendationUpvoted = await recommendationRepository.upvote({ id });
@@ -46,7 +46,7 @@ class RecommendationService {
       id
     });
     if (!recommendationExists) {
-      throw new AppError('Recommendations does not exists');
+      throw new AppError('Recommendations does not exists', 404);
     }
 
     if (recommendationExists.score <= -5) {

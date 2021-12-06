@@ -35,7 +35,6 @@ class RecommendationController {
         data: recommendation
       });
     } catch (err) {
-      console.log(err);
       return HelperResponse.failed(res, err);
     }
   }
@@ -54,7 +53,6 @@ class RecommendationController {
         data: recommendationUpvoted
       });
     } catch (err) {
-      console.log(err);
       return HelperResponse.failed(res, err);
     }
   }
@@ -75,7 +73,6 @@ class RecommendationController {
         data: recommendationDownvoted
       });
     } catch (err) {
-      console.log(err);
       return HelperResponse.failed(res, err);
     }
   }
@@ -90,7 +87,6 @@ class RecommendationController {
         data: recomendation
       });
     } catch (err) {
-      console.log(err);
       return HelperResponse.failed(res, err);
     }
   }
@@ -109,7 +105,6 @@ class RecommendationController {
         data: topRecomendations
       });
     } catch (err) {
-      console.log(err);
       return HelperResponse.failed(res, err);
     }
   }
