@@ -12,6 +12,8 @@ class RecommendationRepository {
   async findAll() {
     const result = await connection.query('SELECT * FROM recommendations;');
     if (result.rows.length === 0) return null;
+
+    return result.rows;
   }
 
   async findByLink({ youtubeLink }) {
