@@ -1,12 +1,13 @@
 import RecommendationRepository from '../repositories/RecommendationRepository.js';
 import AppError from '../errors/AppError.js';
+import { httpStatus } from '../utils/constants.js';
 import * as Functions from '../utils/functions.js';
 
 class RecommendationService {
   async newRecommendation({ name, youtubeLink }) {
     const isValidLink = Functions.validateYoutubeLink(youtubeLink);
     if (!isValidLink) {
-      throw new AppError('Not a youtube link', 400);
+      throw new AppError('Not a youtube link', httpStatus.BAD_REQUEST);
     }
 
     const recommendationRepository = new RecommendationRepository();
@@ -14,7 +15,7 @@ class RecommendationService {
       youtubeLink
     });
     if (recommendationExists) {
-      throw new AppError('Recommendation already exists', 409);
+      throw new AppError('Recommendation already exists', httpStatus.CONFLICT);
     }
 
     const recommendation = await recommendationRepository.create({
@@ -32,7 +33,10 @@ class RecommendationService {
       id
     });
     if (!recommendationExists) {
-      throw new AppError('Recommendations does not exists', 404);
+      throw new AppError(
+        'Recommendations does not exists',
+        httpStatus.NOT_FOUND
+      );
     }
 
     const recommendationUpvoted = await recommendationRepository.upvote({ id });
@@ -46,7 +50,10 @@ class RecommendationService {
       id
     });
     if (!recommendationExists) {
-      throw new AppError('Recommendations does not exists', 404);
+      throw new AppError(
+        'Recommendations does not exists',
+        httpStatus.NOT_FOUND
+      );
     }
 
     if (recommendationExists.score <= -5) {
@@ -64,7 +71,7 @@ class RecommendationService {
 
     const allRecommendations = await recommendationRepository.findAll();
     if (!allRecommendations) {
-      throw new AppError('No recommendations yet', 404);
+      throw new AppError('No recommendations yet', httpStatus.NOT_FOUND);
     }
 
     const onlyHasScoreOverTen = Functions.checkScoreOverTen(allRecommendations);
@@ -97,7 +104,7 @@ class RecommendationService {
     });
 
     if (amount > 0 && topRecommendations.length === 0) {
-      throw new AppError('No recommendations yet', 404);
+      throw new AppError('No recommendations yet', httpStatus.NOT_FOUND);
     }
 
     return topRecommendations;
